@@ -171,8 +171,6 @@ a:active {
   text-decoration: none;
 }
 
-/*-------------------*/
-
 main,
 .site-content {
   background-color: #fff;
@@ -186,4 +184,11 @@ main,
 
 .calc-res li {
   margin: 10px 0;
+}
+
+.site {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
 }

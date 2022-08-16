@@ -24,3 +24,7 @@
   font-size: 1.4rem;
   margin-bottom: none;
 }
+
+.footer-bottom .flex-container {
+  padding-left: 25px;
+}

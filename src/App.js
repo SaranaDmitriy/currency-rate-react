@@ -4,6 +4,10 @@ import "./App.css";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import Rate from "./Rate/Rate";
+import About from "./About/About";
+import Exchange from "./Exchange/Exchange";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 class App extends React.Component {
   constructor(props) {
@@ -13,60 +17,32 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="site">
-        <Header />
+      <BrowserRouter>
+        <div className="site">
+          <Header />
 
-        <div className="container">
-          <main>
-            <Rate />
+          <main className="container">
+            <Routes>
+              <Route path="/" element={<Rate />} />
+              <Route path="/exchange" element={<Exchange />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
 
-            <h3>Калькулятор обмена</h3>
-            <div className="block">
-              <div>Я хочу</div>
-              <div>
-                <label>
-                  <input type="radio" name="radio" defaultValue="0" />
-                  купить
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input type="radio" name="radio" defaultValue="1" />
-                  продать
-                </label>
-              </div>
-              <div>
-                <input type="number" defaultValue="150" />
-                <select name="" id="">
-                  <option defaultValue="USD">USD</option>
-                  <option defaultValue="RUB">RUB</option>
-                  <option defaultValue="EUR">EUR</option>
-                </select>
-              </div>
-              <div>
-                <h4>Результат</h4>
-                <ul className="calc-res">
-                  <li>EUR 150</li>
-                  <li>EUR 150</li>
-                  <li>EUR 150</li>
-                  <li>EUR 150</li>
-                </ul>
+            <div id="cookie_info">
+              <div className="site-content">
+                <div className="well">
+                  На нашем сайте мы используем cookie для сбора информации технического характера.{" "}
+                  <br />В частности для персонифированной работы сайта мы обрабатываем IP-адресс
+                  региона вашего местоположения.&nbsp;{" "}
+                  <button className="btn btn-primary btn-sm"> ОК </button>
+                </div>
               </div>
             </div>
           </main>
-        </div>
 
-        <div className="container" id="cookie_info">
-          <div className="site-content">
-            <div className="well">
-              На нашем сайте мы используем cookie для сбора информации технического характера.{" "}
-              <br />В частности для персонифированной работы сайта мы обрабатываем IP-адресс региона
-              вашего местоположения.&nbsp; <button className="btn btn-primary btn-sm"> ОК </button>
-            </div>
-          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
+      </BrowserRouter>
     );
   }
 }

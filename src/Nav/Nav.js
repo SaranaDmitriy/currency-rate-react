@@ -13,15 +13,15 @@ class Nav extends React.Component {
         <div className="container">
           <nav>
             <ul>
-              {/* <li>
-                <a href="#">Главная</a>
+              <li>
+                <a href="/">Главная</a>
               </li>
               <li>
-                <a href="#">Пункты обмена</a>
+                <a href="/exchange">Пункты обмена</a>
               </li>
               <li>
-                <a href="#">Контакты</a>
-              </li> */}
+                <a href="/about">О нас</a>
+              </li>
             </ul>
           </nav>
         </div>

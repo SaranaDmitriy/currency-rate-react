@@ -1,90 +1,65 @@
 import React from "react";
 import "./Rate.css";
+import Calc from "../Calc/Calc";
 
 class Rate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       date: "",
-      currencyRate: {},
+      currencyRate: [],
     };
-    this.currency = ["USD", "UAH", "RUB"];
+    this.currency = ["USD", "EUR", "BTC"];
+    this.today = new Date().toLocaleDateString();
+    this.updateFrequency = 60 * 60 * 1000;
   }
 
   componentDidMount() {
-    fetch(
-      "https://api.apilayer.com/exchangerates_data/latest?apikey=vTLj120LK4pbmyM8Km6uvvHpgRtf65kk"
-    )
-      .then((response) => response.json())
-      .then((response) => {
-        this.setState({ date: response.date });
-        let res = {};
-        for (let i = 0; i < this.currency.length; i++) {
-          res[this.currency[i]] = response.rates[this.currency[i]];
-        }
-        this.setState({ currencyRate: res });
-      });
+    if (localStorage.getItem("time") && +localStorage.getItem("time") + this.updateFrequency < Date.now()) {
+      this.setState({ currencyRate: JSON.parse(localStorage.getItem("currencyRate")) });
+    } else {
+      localStorage.setItem("time", Date.now());
+
+      fetch("https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5")
+        .then((response) => response.json())
+        .then((response) => {
+          localStorage.setItem("currencyRate", JSON.stringify(response));
+          this.setState({ currencyRate: JSON.parse(localStorage.getItem("currencyRate")) });
+        });
+    }
   }
 
   render() {
     return (
       <div className="rate">
-        <h3>Курс на {this.state.date}</h3>
+        <h3>Курс на {this.today}</h3>
         <div className="flex-container">
-          {Object.keys(this.state.currencyRate).map((elem) => (
-            <div className="block flex-item" key={elem}>
-              <div className="currency-name">{elem}</div>
-              <div className="currency-in">{this.state.currencyRate[elem].toFixed(2)}</div>
-              <p>* Можно купить за 1 EUR</p>
+          {this.state.currencyRate.map((elem) => (
+            <div className="block flex-item" key={elem.ccy}>
+              <div className="currency-name">{elem.ccy}</div>
+              <p>
+                Можно продать в Приват Банке по курсу - {Number(elem.buy).toFixed(2) + " " + elem.base_ccy + "  "}
+                за единицу
+              </p>
             </div>
           ))}
         </div>
+        <div className="flex-container">
+          {this.state.currencyRate.map((elem) => (
+            <div className="block flex-item" key={elem.ccy}>
+              <div className="currency-name">{elem.ccy}</div>
+              <p>
+                Можно купить в Приват Банке по курсу - {Number(elem.sale).toFixed(2) + " " + elem.base_ccy + "  "}
+                за единицу
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <Calc currencyRate={this.state.currencyRate} />
       </div>
     );
   }
 }
 
 export default Rate;
-
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       date: "",
-//       currencyRate: {},
-//     };
-//     this.currency = ["USD", "RUB", "CAD", "UAH"];
-//   }
-
-//   componentDidMount() {
-//     fetch(
-//       "https://api.apilayer.com/exchangerates_data/latest?apikey=vTLj120LK4pbmyM8Km6uvvHpgRtf65kk"
-//     )
-//       .then((data) => data.json())
-//       .then((data) => {
-//         console.log(data);
-//         this.setState({ date: data.date });
-//         let result = {};
-//         for (let i = 0; i < this.currency.length; i++) {
-//           result[this.currency[i]] = data.rates[this.currency[i]];
-//         }
-//         this.setState({ currencyRate: result });
-//       });
-//   }
-
-//   render() {
-//     return (
-//       <div className="rate">
-//         <h3>Курс на {this.state.date}</h3>
-//         <div className="flex-container">
-//           {Object.keys(this.state.currencyRate).map((keyName, i) => (
-//             <div className="block flex-item" key={keyName}>
-//               <div className="currency-name">{keyName}</div>
-//               <div className="currency-in">{this.state.currencyRate[keyName].toFixed(2)}</div>
-//               <p>* Можно купить за 1 EUR</p>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     );
-//   }
-// }
